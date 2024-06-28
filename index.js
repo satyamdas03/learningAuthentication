@@ -19,9 +19,19 @@ app.get("/register", (req, res) => {
   res.render("register.ejs");
 });
 
-app.post("/register", async (req, res) => { });
+app.post("/register", async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  console.log(username);
+  console.log(password);
+});
 
-app.post("/login", async (req, res) => { });
+app.post("/login", async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  console.log(username);
+  console.log(password);
+});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
