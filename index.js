@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg"; //connecting to the db
-import { database, password } from "pg/lib/defaults";
+// import { database, password } from "pg/lib/defaults";
 
 const app = express();
 const port = 3000;
@@ -35,13 +35,29 @@ app.post("/register", async (req, res) => {
   const email = req.body.username;
   const password = req.body.password;
 
-  //registering users into the db
-  const result = await db.query(
-    "INSERT INTO users (email, password) VALUES ($1, $2)",
-    [email, password]
-  );
-  console.log(result);
-  res.render("secrets.ejs");
+  //registering users into the db --> will crash if the same the email is used for registering more than once
+  // const result = await db.query(
+  //   "INSERT INTO users (email, password) VALUES ($1, $2)",
+  //   [email, password]
+  // );
+  // console.log(result);
+  // res.render("secrets.ejs");
+
+  //solution to the above problem
+  const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
+    email,
+  ]);
+  if (checkResult.rows.length > 0) {
+    res.send("email already exits. try logging in");
+  }
+  else {
+    const result = await db.query(
+      "INSERT INTO users (email, password) VALUES ($1,$2)",
+      [email, password]
+    );
+    console.log(result);
+    res.render("secrets.ejs");
+  }
 
 
 });
