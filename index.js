@@ -1,11 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
-import pg from "pg";
+import pg from "pg"; //connecting to the db
 import { database, password } from "pg/lib/defaults";
 
 const app = express();
 const port = 3000;
 
+//connecting to db
 const db = new pg.Client({
   user: "postgres",
   host: "localhost",
@@ -33,6 +34,7 @@ app.get("/register", (req, res) => {
 app.post("/register", async (req, res) => {
   const email = req.body.username;
   const password = req.body.password;
+
 });
 
 app.post("/login", async (req, res) => {
