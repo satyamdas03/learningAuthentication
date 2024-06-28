@@ -44,20 +44,26 @@ app.post("/register", async (req, res) => {
   // res.render("secrets.ejs");
 
   //solution to the above problem
-  const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
-    email,
-  ]);
-  if (checkResult.rows.length > 0) {
-    res.send("email already exits. try logging in");
+  try {
+    const checkResult = await db.query("SELECT * FROM users WHERE email = $1", [
+      email,
+    ]);
+    if (checkResult.rows.length > 0) {
+      res.send("email already exits. try logging in");
+    }
+    else {
+      const result = await db.query(
+        "INSERT INTO users (email, password) VALUES ($1,$2)",
+        [email, password]
+      );
+      console.log(result);
+      res.render("secrets.ejs");
+    }
   }
-  else {
-    const result = await db.query(
-      "INSERT INTO users (email, password) VALUES ($1,$2)",
-      [email, password]
-    );
-    console.log(result);
-    res.render("secrets.ejs");
+  catch (err) {
+    console.log(err);
   }
+
 
 
 });
