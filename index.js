@@ -64,13 +64,33 @@ app.post("/register", async (req, res) => {
     console.log(err);
   }
 
-
-
 });
 
 app.post("/login", async (req, res) => {
   const email = req.body.username;
   const password = req.body.password;
+
+  try {
+    const result = await db.query("SELECT * FROM users WHERE email = $1", [
+      email,
+    ]);
+    if (result.rows.length > 0) {
+      const user = result.rows[0];
+      const storedPassword = user.password;
+      if (password === storedPassword) {
+        res.render("secrets.ejs");
+      }
+      else {
+        res.send("incorrect password");
+      }
+    }
+    else {
+      res.send("user not found");
+    }
+  }
+  catch (err) {
+    console.log(err);
+  }
 });
 
 app.listen(port, () => {
